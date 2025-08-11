@@ -1,4 +1,4 @@
-name: Rainbow-Backend-report-QA Deploy Image
+name: Nishat-Backend-report-QA Deploy Image
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ jobs:
           echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker rm backend-report-qa || true
           echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker login ${{secrets.REGISTRY_URL}} -u ${{secrets.REGISTRY_USERNAME}} -p ${{secrets.REGISTRY_PASSWORD}} || true
           echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker rmi wimetrixcregistery.azurecr.io/wimetrixcregistery/rainbow-backend-reportqa:latest || true
-          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker run -d -p 4009:4005 --restart unless-stopped --name backend-report-qa wimetrixcregistery.azurecr.io/wimetrixcregistery/rainbow-backend-reportqa:latest
+          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker run -d -p 4009:4005 --restart unless-stopped --name backend-report-qa wimetrixcregistery.azurecr.io/wimetrixcregistery/Nishat-backend-reportqa:latest
   
   Notification:
     runs-on: ubuntu-latest

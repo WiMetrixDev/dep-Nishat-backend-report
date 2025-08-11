@@ -85,8 +85,8 @@ pipeline {
             def dockerfileDir = '/home/jenkins/deployment-package/wimetrix/Nishat-backend-report/'
             def sourceDir = "${dockerfileDir}source"
             withCredentials([
-                        file(credentialsId: 'NISHAT_BACKEND_REPORT_ENV_PROD', variable: 'SECRET_FILE'),
-                        file(credentialsId: 'RAINBOW_BACKEND_REPORT_PRODUCTION', variable: 'SECRET_FILE2' )
+                        file(credentialsId: 'NISHAT_BACKEND_COMMON_ENV_PROD', variable: 'SECRET_FILE'),
+                        file(credentialsId: 'NISHAT_BACKEND_REPORT_PRODUCTION', variable: 'SECRET_FILE2' )
                     ]){
 
                     sh label: '', script: '''
