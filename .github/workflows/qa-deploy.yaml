@@ -1,0 +1,48 @@
+name: Rainbow-Backend-report-QA Deploy Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Select the branch to deploy (e.g., qa or production)'
+        required: true
+        default: 'qa'
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, rainbow-production]
+    name: Deploy Latest Image on Docker
+    steps:
+      - name: Run SH Command
+        run: |
+          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker stop backend-report-qa || true
+          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker rm backend-report-qa || true
+          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker login ${{secrets.REGISTRY_URL}} -u ${{secrets.REGISTRY_USERNAME}} -p ${{secrets.REGISTRY_PASSWORD}} || true
+          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker rmi wimetrixcregistery.azurecr.io/wimetrixcregistery/rainbow-backend-reportqa:latest || true
+          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker run -d -p 4009:4005 --restart unless-stopped --name backend-report-qa wimetrixcregistery.azurecr.io/wimetrixcregistery/rainbow-backend-reportqa:latest
+  
+  Notification:
+    runs-on: ubuntu-latest
+    name: Send Notifications to Teams
+    needs: [deploy]
+    if: always()
+    steps:
+      - name: Check failure
+        run: |
+          json='${{ toJson(needs) }}'
+          for key in $(echo "$json" | jq -r 'keys[]'); do
+            status=$(echo "$json" | jq -r ".\"$key\".result")
+            if [[ "$status" != "success" ]]; then
+              exit 1
+            fi
+          done
+
+      - name: Send Notification
+        # cSpell: disable-next-line
+        uses: skitionek/notify-microsoft-teams@v1.0.8
+        if: always()
+        with:
+          webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
+          needs: ${{toJson(needs)}}
+          job: ${{toJson(job)}}
+          steps: ${{toJson(steps)}}
