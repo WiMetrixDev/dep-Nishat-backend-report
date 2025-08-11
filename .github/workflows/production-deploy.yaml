@@ -18,8 +18,8 @@ jobs:
           echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker stop backend-report-production || true
           echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker rm backend-report-production || true
           echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker login ${{secrets.REGISTRY_URL}} -u ${{secrets.REGISTRY_USERNAME}} -p ${{secrets.REGISTRY_PASSWORD}} || true
-          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker rmi wimetrixcregistery.azurecr.io/wimetrixcregistery/Nishat-backend-report:latest || true
-          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker run -d -p 4010:4005 --restart unless-stopped --name backend-report-production wimetrixcregistery.azurecr.io/wimetrixcregistery/Nishat-backend-report:latest
+          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker rmi wimetrixcregistery.azurecr.io/wimetrixcregistery/nishat-backend-report:latest || true
+          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker run -d -p 4010:4005 --restart unless-stopped --name backend-report-production wimetrixcregistery.azurecr.io/wimetrixcregistery/nishat-backend-report:latest
   
   Notification:
     runs-on: ubuntu-latest
